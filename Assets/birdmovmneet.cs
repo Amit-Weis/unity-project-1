@@ -11,6 +11,10 @@ public class birdmovmneet : MonoBehaviour
     private float mirror = 0;
     public GameObject bird_sprite;
     public GameObject tracker;
+    public GameObject bird_sprite_inverted;
+    private float smooth_angle;
+    private Vector3 rotationVector;
+    private bool bird_inverted = false;
     public static int RoundAwayFromZero(float value)
     {
         if (value > 0)
@@ -42,27 +46,54 @@ public class birdmovmneet : MonoBehaviour
         angle = (x == 1 && y == 0) ? 0 :                    // Right
                 (x == 1 && y == 1) ? 45 :                   // Up-Right
                 (x == 0 && y == 1) ? 90 :                   // Up
-                (x == -1 && y == 1) ? 225 :                  // Up-Left
-                (x == -1 && y == 0) ? 180 :                  // Left
-                (x == -1 && y == -1) ? 135 :                 // Down-Left
-                (x == 0 && y == -1) ? 270 :                  // Down
-                (x == 1 && y == -1) ? 315 :                  // Down-Right
+                (x == 0 && y == -1) ? -90 :                  // Down
+                (x == 1 && y == -1) ? -45 :                  // Down-Right
+                (x == -1 && y == 1) ? 45+2*360 :                  // Up-Left
+                (x == -1 && y == 0) ? 0+2*360 :                  // Left
+                (x == -1 && y == -1) ? -45+2*360 :                 // Down-Left
                 angle;                                       // Default case
 
 
 
+        if (angle > 360)
+        {
+            if (bird_inverted == false)
+            {
+                old_angle = 180 - angle;
+                bird_inverted = true;   
+            }
+            bird_sprite.SetActive(false);
+            bird_sprite_inverted.SetActive(true);
 
-        transform.Translate(translation_x, translation_y, 0);
-        float smooth_angle = Mathf.SmoothDampAngle(old_angle, angle, ref r, 0.1f);
+            transform.Translate(translation_x, translation_y, 0);
+            smooth_angle = Mathf.SmoothDampAngle(old_angle, angle, ref r, 0.1f);
 
-        // Rotate the sprite to face the direction
-        Vector3 rotationVector = new Vector3(mirror, 0, smooth_angle);
-        bird_sprite.transform.localRotation = Quaternion.Euler(rotationVector);
-        tracker.transform.rotation = Quaternion.Euler(new Vector3(0, 0, smooth_angle));
+            // Rotate the sprite to face the direction
+            rotationVector = new Vector3(0, 180, smooth_angle);
+            bird_sprite_inverted.transform.localRotation = Quaternion.Euler(rotationVector);
+            tracker.transform.rotation = Quaternion.Euler(new Vector3(0, 0, smooth_angle));
 
-        transform.rotation = Quaternion.Euler(new Vector3(0,0,0));
+        }
+        else
+        {   
+            if (bird_inverted)
+            {
+                old_angle = 180 - angle;
+                bird_inverted = false;
+            }
+            bird_sprite.SetActive(true);
+            bird_sprite_inverted.SetActive(false);
+            transform.Translate(translation_x, translation_y, 0);
+            smooth_angle = Mathf.SmoothDampAngle(old_angle, angle, ref r, 0.1f);
 
+            // Rotate the sprite to face the direction
+            rotationVector = new Vector3(0, 0, smooth_angle);
+            bird_sprite.transform.localRotation = Quaternion.Euler(rotationVector);
+            tracker.transform.rotation = Quaternion.Euler(new Vector3(0, 0, smooth_angle));
 
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
+        }
 
     }
 }
