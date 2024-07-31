@@ -48,9 +48,9 @@ public class birdmovmneet : MonoBehaviour
                 (x == 0 && y == 1) ? 90 :                   // Up
                 (x == 0 && y == -1) ? -90 :                  // Down
                 (x == 1 && y == -1) ? -45 :                  // Down-Right
-                (x == -1 && y == 1) ? 45+2*360 :                  // Up-Left
-                (x == -1 && y == 0) ? 0+2*360 :                  // Left
-                (x == -1 && y == -1) ? -45+2*360 :                 // Down-Left
+                (x == -1 && y == 1) ? 45 + 2 * 360 :                  // Up-Left
+                (x == -1 && y == 0) ? 0 + 2 * 360 :                  // Left
+                (x == -1 && y == -1) ? -45 + 2 * 360 :                 // Down-Left
                 angle;                                       // Default case
 
 
@@ -60,7 +60,7 @@ public class birdmovmneet : MonoBehaviour
             if (bird_inverted == false)
             {
                 old_angle = 180 - angle;
-                bird_inverted = true;   
+                bird_inverted = true;
             }
             bird_sprite.SetActive(false);
             bird_sprite_inverted.SetActive(true);
@@ -75,7 +75,7 @@ public class birdmovmneet : MonoBehaviour
 
         }
         else
-        {   
+        {
             if (bird_inverted)
             {
                 old_angle = 180 - angle;
