@@ -10,6 +10,7 @@ public class birdGliding : MonoBehaviour
     public float maxSpeed = 100;
     public float minSpeed = 10;
     public float rotationSpeed = 10;
+    public float flapFactor = 2;
 
 
     public float thrustFacter = 5;
@@ -33,7 +34,6 @@ public class birdGliding : MonoBehaviour
     {
         GlidingMovment();    
     }
-
     private void GlidingMovment() 
     {
         rb.AddForce(Vector2.down * gravityFactor);
@@ -53,9 +53,16 @@ public class birdGliding : MonoBehaviour
         }
         else
         {
+
             Vector2 force = Vector2.right * currentSpeed;
-            rb.AddRelativeForce(force); 
+            rb.AddRelativeForce(force);
+            if (Input.GetKeyDown("a"))
+            {
+                rb.velocity = Vector2.up * flapFactor;
+
+            }
         }
+
 
 
         Vector2 forward = rb.transform.forward;
@@ -65,8 +72,9 @@ public class birdGliding : MonoBehaviour
 
     private void RotationManager() 
     {
-        float x = Input.GetAxis("Horizontal");
+        float x = Input.GetAxis("Horizontal") * flapFactor * Time.deltaTime;
         float y = Input.GetAxis("Vertical") * rotationSpeed * Time.deltaTime;
         transform.Rotate(0, 0, y);
     }
+
 }
