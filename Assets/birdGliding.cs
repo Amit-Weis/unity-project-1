@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,6 +18,9 @@ public class birdGliding : MonoBehaviour
     public float gravityFactor = 3;
 
     private Rigidbody2D rb;
+    public GameObject birdSprite;
+    public GameObject invertedBirdSprite;
+    public Updraft Updraft;
 
     // Start is called before the first frame update
     void Start()
@@ -43,8 +47,13 @@ public class birdGliding : MonoBehaviour
         float thrustFromRotation = Mathf.Clamp(-Mathf.Sin(rotationInRads), 0, 1) * thrustFacter;
         float thrustFromGravity = Mathf.Clamp(-Mathf.Sin(rotationInRads), -1, 0) * gravityFactor;
 
+        if (currentSpeed < 0 && thrustFromRotation > 0)
+        {
+            currentSpeed = -currentSpeed;
+        }
         currentSpeed += thrustFromRotation + thrustFromGravity;
-        currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed, maxSpeed);
+        currentSpeed = Mathf.Clamp(currentSpeed, (-maxSpeed*2)/3, maxSpeed);
+
 
         if (currentSpeed < minSpeed)
         {
@@ -75,6 +84,23 @@ public class birdGliding : MonoBehaviour
         float x = Input.GetAxis("Horizontal") * flapFactor * Time.deltaTime;
         float y = Input.GetAxis("Vertical") * rotationSpeed * Time.deltaTime;
         transform.Rotate(0, 0, y);
+
+        if ((transform.rotation.eulerAngles.z > 90 && transform.rotation.eulerAngles.z <= 270))
+        {
+            invertedBirdSprite.SetActive(true);
+            birdSprite.SetActive(false);
+        }
+        else
+        {
+            birdSprite.SetActive(true);
+            invertedBirdSprite.SetActive(false);
+        }
+    }
+
+
+    public void inUpDraft(float windFactor) 
+    {
+    
     }
 
 }
