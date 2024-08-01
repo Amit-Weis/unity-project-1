@@ -17,7 +17,6 @@ public class Updraft : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("uppies");
         /*rb.AddForce(Vector2.up * windFactor);*/
         inUpdraft.Invoke(windFactor);
     }

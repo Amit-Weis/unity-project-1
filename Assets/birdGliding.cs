@@ -11,7 +11,7 @@ public class birdGliding : MonoBehaviour
     public float maxSpeed = 100;
     public float minSpeed = 10;
     public float rotationSpeed = 10;
-    public float flapFactor = 2;
+    public float flapHeight = 2;
 
 
     public float thrustFacter = 5;
@@ -22,6 +22,8 @@ public class birdGliding : MonoBehaviour
     public GameObject invertedBirdSprite;
     public Updraft Updraft;
 
+    private bool alive = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +33,29 @@ public class birdGliding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RotationManager();
+        if (alive)
+        {
+            RotationManager();
+        }
+
     }
 
     private void FixedUpdate()
     {
-        GlidingMovment();    
+        if (alive)
+        {
+            GlidingMovment();
+        }
+        if (Input.GetKeyDown("space"))
+        {
+            transform.position = new Vector3((float)-101.3, (float)0.9, 0);
+            currentSpeed = 3;
+            rb.velocity = Vector2.zero;
+            transform.rotation = new Quaternion(0, 0, 0, 0);
+            rb.gravityScale = 0;
+            rb.angularVelocity = 0;
+            alive = true;
+        }
     }
     private void GlidingMovment() 
     {
@@ -51,6 +70,8 @@ public class birdGliding : MonoBehaviour
         {
             currentSpeed = -currentSpeed;
         }
+
+
         currentSpeed += thrustFromRotation + thrustFromGravity;
         currentSpeed = Mathf.Clamp(currentSpeed, (-maxSpeed*2)/3, maxSpeed);
 
@@ -65,11 +86,6 @@ public class birdGliding : MonoBehaviour
 
             Vector2 force = Vector2.right * currentSpeed;
             rb.AddRelativeForce(force);
-            if (Input.GetKeyDown("a"))
-            {
-                rb.velocity = Vector2.up * flapFactor;
-
-            }
         }
 
 
@@ -81,7 +97,7 @@ public class birdGliding : MonoBehaviour
 
     private void RotationManager() 
     {
-        float x = Input.GetAxis("Horizontal") * flapFactor * Time.deltaTime;
+        float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical") * rotationSpeed * Time.deltaTime;
         transform.Rotate(0, 0, y);
 
@@ -100,7 +116,19 @@ public class birdGliding : MonoBehaviour
 
     public void inUpDraft(float windFactor) 
     {
-    
+        Debug.Log("uppies");
+        rb.AddForce(Vector2.up * windFactor);
     }
 
+    public void death()
+    {
+        if (alive)
+        {
+            rb.velocity = new Vector2(1 * currentSpeed, 1 * gravityFactor);
+            rb.gravityScale = 10;
+            rb.angularVelocity = 10 * currentSpeed;
+            Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);
+        }
+        alive = false;
+    }
 }
