@@ -21,10 +21,11 @@ public class birdGliding : MonoBehaviour
     private Rigidbody2D rb;
     public GameObject birdSprite;
     public GameObject invertedBirdSprite;
-    public Updraft Updraft;
+    public AudioSource wind;
 
     private bool alive = true;
     public UnityEvent<float, float> currentSpeedAnnoucment;
+    public UnityEvent deathAnnoucment;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,15 @@ public class birdGliding : MonoBehaviour
             RotationManager();
         }
 
+        if (currentSpeed > minSpeed)
+        {
+            float noise = Mathf.Pow((currentSpeed / maxSpeed), 3);
+            wind.volume = noise;
+        }
+        else
+        {
+            wind.volume = 0;
+        }
     }
 
     private void FixedUpdate()
@@ -130,7 +140,9 @@ public class birdGliding : MonoBehaviour
             rb.gravityScale = 10;
             rb.angularVelocity = 10 * currentSpeed;
             Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);
+            deathAnnoucment.Invoke();
         }
         alive = false;
     }
+
 }
