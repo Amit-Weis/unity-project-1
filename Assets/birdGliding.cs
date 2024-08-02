@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 public class birdGliding : MonoBehaviour
@@ -23,6 +24,7 @@ public class birdGliding : MonoBehaviour
     public Updraft Updraft;
 
     private bool alive = true;
+    public UnityEvent<float, float> currentSpeedAnnoucment;
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +59,7 @@ public class birdGliding : MonoBehaviour
             alive = true;
         }
     }
-    private void GlidingMovment() 
+    private void GlidingMovment()
     {
         rb.AddForce(Vector2.down * gravityFactor);
 
@@ -73,7 +75,7 @@ public class birdGliding : MonoBehaviour
 
 
         currentSpeed += thrustFromRotation + thrustFromGravity;
-        currentSpeed = Mathf.Clamp(currentSpeed, (-maxSpeed*2)/3, maxSpeed);
+        currentSpeed = Mathf.Clamp(currentSpeed, (-maxSpeed * 2) / 3, maxSpeed);
 
 
         if (currentSpeed < minSpeed)
@@ -92,10 +94,11 @@ public class birdGliding : MonoBehaviour
 
         Vector2 forward = rb.transform.forward;
 
+        currentSpeedAnnoucment.Invoke(currentSpeed, maxSpeed);
         Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);
     }
 
-    private void RotationManager() 
+    private void RotationManager()
     {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical") * rotationSpeed * Time.deltaTime;
@@ -114,9 +117,8 @@ public class birdGliding : MonoBehaviour
     }
 
 
-    public void inUpDraft(float windFactor) 
+    public void inUpDraft(float windFactor)
     {
-        Debug.Log("uppies");
         rb.AddForce(Vector2.up * windFactor);
     }
 

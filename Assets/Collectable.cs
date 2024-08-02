@@ -1,18 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Collectable : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public UnityEvent coinCollected;
+
+    private bool collected = false;
+
+    private void Start()
     {
-        
+
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collected)
+        {
+            Debug.Log("once or twice");
+            GameObject self = gameObject;
+            coinCollected.Invoke();
+            Destroy(self);
+        }
+        collected = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetGameManager(GameManagaer manager)
     {
-        
+        coinCollected.AddListener(manager.coinCollected);
     }
+
 }
