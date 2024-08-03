@@ -20,6 +20,7 @@ public class GameManagaer : MonoBehaviour
     private bool alive = true;
     private float mappedSpeed;
     private List<Vector3> coinPositions = new List<Vector3>();
+    private float noiseModifier = 0f;
     // Start is called before the first frame update
 
     private void Start()
@@ -32,12 +33,21 @@ public class GameManagaer : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        float noise = Mathf.Pow(mappedSpeed / 100.0f, 2);
+        float noise = Mathf.Pow(mappedSpeed / 100.0f, 2) + noiseModifier;
 
         lowstakes.volume = noise;
         highstakes.volume = noise;
 
-        if (time >= 1.8462 * 4)
+        if (switchSong && alive)
+        {
+            lowstakes.enabled = false;
+            highstakes.enabled = true;
+            switchSong = false;
+            noiseModifier = 0.2f;
+        }
+        time = 0;
+
+        if (time >= 1.8462)
         {
             if (switchSong && alive)
             {
