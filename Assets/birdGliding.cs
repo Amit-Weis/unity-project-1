@@ -105,7 +105,7 @@ public class birdGliding : MonoBehaviour
         Vector2 forward = rb.transform.forward;
 
         currentSpeedAnnoucment.Invoke(currentSpeed, maxSpeed);
-        Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);
+        /*        Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);*/
     }
 
     private void RotationManager()
@@ -141,6 +141,7 @@ public class birdGliding : MonoBehaviour
             rb.angularVelocity = 10 * currentSpeed;
             Debug.DrawLine(rb.position, rb.velocity + rb.position, Color.red);
             deathAnnoucment.Invoke();
+            wind.enabled = false;
         }
         alive = false;
     }

@@ -7,65 +7,97 @@ using UnityEngine.UI;
 
 public class GameManagaer : MonoBehaviour
 {
+    //*
+    // Public
+
+    // UI Elements
     public Text speedCounter;
     public Text coinCounter;
-    public GameObject bird;
-    private int counterNum = 0;
-    public GameObject collectablePrefab;
+    public Image coinCounterImage;
+
+    // Audio sources
     public AudioSource lowstakes;
     public AudioSource highstakes;
     public AudioSource crash;
-    private float time = 0;
-    private bool switchSong = false;
-    private bool alive = true;
+    public AudioSource chime;
+
+    // Game objects
+    public GameObject bird;
+    public GameObject collectablePrefab;
+
+    // sprites
+    public Sprite onecoins;
+    public Sprite twocoins;
+
+    //*
+    // Private
+
+    // music variables
     private float mappedSpeed;
-    private List<Vector3> coinPositions = new List<Vector3>();
     private float noiseModifier = 0f;
-    // Start is called before the first frame update
+    private bool switchSong = false;
+
+    // logic variables
+    private bool alive = true;
+
+    // coin variables
+    private List<Vector3> coinPositions = new List<Vector3>();
+    private List<Sprite> coinUI = new List<Sprite>();
 
     private void Start()
     {
+        coinUI.Add(twocoins);
+        coinUI.Add(onecoins);
         coinPositions.Add(new Vector3(-98.1f, 25.6f, 0));
-        coinPositions.Add(new Vector3(84.5f, 32.9f, 0));
+        coinPositions.Add(new Vector3(-57f, -15f, 0));
+        InstantiateCollectable();
     }
 
     private void Update()
     {
-        time += Time.deltaTime;
 
+        updateMusicVolume();
+
+        if (switchSong && alive)
+        {
+            switchSongs();
+        }
+    }
+
+    private void updateMusicVolume()
+    {
         float noise = Mathf.Pow(mappedSpeed / 100.0f, 2) + noiseModifier;
 
         lowstakes.volume = noise;
         highstakes.volume = noise;
+    }
 
-        if (switchSong && alive)
-        {
-            lowstakes.enabled = false;
-            highstakes.enabled = true;
-            switchSong = false;
-            noiseModifier = 0.2f;
-        }
-        time = 0;
-
-        if (time >= 1.8462)
-        {
-            if (switchSong && alive)
-            {
-                lowstakes.enabled = false;
-                highstakes.enabled = true;
-                switchSong = false;
-            }
-            time = 0;
-        }
+    private void switchSongs()
+    {
+        lowstakes.enabled = false;
+        highstakes.enabled = true;
+        switchSong = false;
+        noiseModifier = 0.2f;
     }
     public void coinCollected()
     {
-        counterNum += 1;
-        coinCounter.text = counterNum.ToString();
+        playChime();
+        updateCoinUI();
         InstantiateCollectable();
         switchSong = true;
     }
 
+    private void playChime()
+    {
+        chime.enabled = false;
+        chime.enabled = true;
+    }
+
+    private void updateCoinUI()
+    {
+        coinCounterImage.sprite = coinUI[coinUI.Count - 1];
+        coinUI.RemoveAt(coinUI.Count - 1);
+    }
     public void currentSpeedAnnoucment(float currentSpeed, float maxSpeed)
     {
         mappedSpeed = (Mathf.Clamp(currentSpeed, 0, float.PositiveInfinity) / maxSpeed) * 100;
@@ -83,10 +115,6 @@ public class GameManagaer : MonoBehaviour
             Collectable collectableScript = collectableInstance.GetComponent<Collectable>();
             collectableScript.SetGameManager(this);
         }
-        else
-        {
-            coinCounter.text = "YUO WON YAYYYY";
-        }
     }
 
     public void birdDead()
@@ -98,4 +126,3 @@ public class GameManagaer : MonoBehaviour
     }
 
 }
-

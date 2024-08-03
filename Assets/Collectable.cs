@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class Collectable : MonoBehaviour
 {
     public UnityEvent coinCollected;
+    public AudioSource chime;
 
     private bool collected = false;
 
@@ -17,6 +18,7 @@ public class Collectable : MonoBehaviour
     {
         if (!collected)
         {
+            chime.enabled = true;
             Debug.Log("once or twice");
             GameObject self = gameObject;
             coinCollected.Invoke();
