@@ -24,6 +24,7 @@ public class GameManagaer : MonoBehaviour
     // Game objects
     public GameObject bird;
     public GameObject collectablePrefab;
+    public GameObject coinObjects;
 
     // sprites
     public Sprite onecoins;
@@ -82,9 +83,29 @@ public class GameManagaer : MonoBehaviour
     public void coinCollected()
     {
         playChime();
+        if (coinUI.Count == 2)
+        {
+            activateCoinObstacles();
+        }
         updateCoinUI();
         InstantiateCollectable();
         switchSong = true;
+    }
+
+    private void activateCoinObstacles()
+    {
+        Transform[] coinObstacles = coinObjects.GetComponentsInChildren<Transform>(true);
+        Debug.Log(coinObstacles.Length);
+        foreach (Transform obstacle in coinObstacles)
+        {
+            if (obstacle != coinObjects.transform) // Ensure we are not toggling the root object itself
+            {
+                GameObject obstacleGameObject = obstacle.gameObject;
+                Debug.Log(obstacleGameObject.activeSelf);
+                obstacleGameObject.SetActive(!obstacleGameObject.activeSelf);
+            }
+        }
+
     }
 
     private void playChime()
