@@ -2467,6 +2467,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 371741551}
     m_Modifications:
+    - target: {fileID: 4995223041967635164, guid: 024ecbac361265642b504300b06391cd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4995223041967635164, guid: 024ecbac361265642b504300b06391cd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.2
+      objectReference: {fileID: 0}
     - target: {fileID: 4995223041967635165, guid: 024ecbac361265642b504300b06391cd, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2553,7 +2561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4995223042376940779, guid: 024ecbac361265642b504300b06391cd, type: 3}
       propertyPath: windFactor
-      value: 4.36
+      value: 6.57
       objectReference: {fileID: 0}
     - target: {fileID: 4995223042376940779, guid: 024ecbac361265642b504300b06391cd, type: 3}
       propertyPath: inUpdraft.m_PersistentCalls.m_Calls.Array.data[0].m_Target
